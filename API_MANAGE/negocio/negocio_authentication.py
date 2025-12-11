@@ -25,7 +25,7 @@ def encriptar_contrasena(contrasena: str) -> tuple:
         hash_contrasena = bcrypt.hashpw(contrasena.encode('utf-8'), salt)
         return hash_contrasena.decode('utf-8'), salt.decode('utf-8')
     except Exception as e:
-        print(f"[ERROR] Error al encriptar contraseña: {e}")
+        print(f"Error al encriptar contraseña: {e}")
         return None, None
 
 
@@ -43,7 +43,7 @@ def verificar_contrasena(contrasena: str, hash_almacenado: str) -> bool:
     try:
         return bcrypt.checkpw(contrasena.encode('utf-8'), hash_almacenado.encode('utf-8'))
     except Exception as e:
-        print(f"[ERROR] Error al verificar contraseña: {e}")
+        print(f"Error al verificar contraseña: {e}")
         return False
 
 
@@ -62,7 +62,7 @@ def registrar_usuario(nombre: str, correo: str, contrasena: str) -> bool:
     try:
         usuario_existente = sesion.query(Usuario).filter_by(correo=correo).first()
         if usuario_existente:
-            print("[ERROR] El correo ya está registrado.")
+            print("El correo ya está registrado.")
             return False
         
         hash_contrasena, salt = encriptar_contrasena(contrasena)
@@ -77,11 +77,11 @@ def registrar_usuario(nombre: str, correo: str, contrasena: str) -> bool:
         )
         
         id_usuario = insertar_objeto(nuevo_usuario)
-        print(f"[OK] Usuario registrado exitosamente con ID: {id_usuario}")
+        print(f"Usuario registrado exitosamente con ID: {id_usuario}")
         return True
     
     except Exception as e:
-        print(f"[ERROR] Error al registrar usuario: {e}")
+        print(f"Error al registrar usuario: {e}")
         sesion.rollback()
         return False
 
@@ -101,18 +101,18 @@ def autenticar_usuario(correo: str, contrasena: str) -> Usuario:
         usuario = sesion.query(Usuario).filter_by(correo=correo).first()
         
         if not usuario:
-            print("[ERROR] Usuario no encontrado.")
+            print("Usuario no encontrado.")
             return None
         
         if verificar_contrasena(contrasena, usuario.contrasena_hash):
-            print(f"[OK] Autenticación exitosa.")
+            print(f"Autenticación exitosa.")
             return usuario
         else:
-            print("[ERROR] Contraseña incorrecta.")
+            print("Contraseña incorrecta.")
             return None
     
     except Exception as e:
-        print(f"[ERROR] Error al autenticar usuario: {e}")
+        print(f"Error al autenticar usuario: {e}")
         return None
 
 
@@ -127,5 +127,5 @@ def listar_usuarios_registrados():
         usuarios = obtener_listado_objetos(Usuario)
         return usuarios if usuarios else []
     except Exception as e:
-        print(f"[ERROR] Error al listar usuarios: {e}")
+        print(f"Error al listar usuarios: {e}")
         return []

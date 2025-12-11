@@ -7,7 +7,7 @@ from servicios.api_service import obtener_recurso_api
 from auxiliares.api_data import url_users
 
 def test_db_and_auth():
-    print("--- Testing DB and Auth ---")
+    print("--- Pruebas de BD y Autenticación ---")
     crear_tablas()
     
     test_email = "test_verification@example.com"
@@ -15,41 +15,41 @@ def test_db_and_auth():
     if existing:
         sesion.delete(existing)
         sesion.commit()
-        print("Cleaned up previous test user.")
+        print("Usuario de prueba anterior eliminado.")
 
-    print("Registering user...")
-    success = registrar_usuario("Test User", test_email, "password123")
+    print("Registrando usuario...")
+    success = registrar_usuario("Usuario Prueba", test_email, "password123")
     if success:
-        print("[OK] Registration successful.")
+        print("Registro exitoso.")
     else:
-        print("[ERROR] Registration failed.")
+        print("Error en el registro.")
         return
 
-    print("Logging in...")
+    print("Iniciando sesión...")
     user = autenticar_usuario(test_email, "password123")
     if user:
-        print(f"[OK] Login successful for {user.nombre}.")
+        print(f"Inicio de sesión exitoso para {user.nombre}.")
     else:
-        print("[ERROR] Login failed.")
+        print("Error al iniciar sesión.")
 
-    print("Logging in with wrong password...")
+    print("Intentando iniciar sesión con contraseña incorrecta...")
     user_wrong = autenticar_usuario(test_email, "wrongpass")
     if not user_wrong:
-        print("[OK] Login failed as expected with wrong password.")
+        print("Inicio de sesión falló como se esperaba con contraseña incorrecta.")
     else:
-        print("[ERROR] Login succeeded with wrong password (unexpected).")
+        print("Inicio de sesión con contraseña incorrecta (inesperado).")
 
 def test_api_service():
-    print("\n--- Testing API Service (GET) ---")
+    print("\n--- Pruebas del Servicio de API (GET) ---")
     import requests
     try:
         response = requests.get(url_users)
         if response.status_code == 200:
-            print(f"[OK] API connectivity to {url_users} successful.")
+            print(f"Conexión a {url_users} exitosa.")
         else:
-            print(f"[ERROR] API connectivity failed: {response.status_code}")
+            print(f"Error en la conexión: {response.status_code}")
     except Exception as e:
-        print(f"[ERROR] API connectivity error: {e}")
+        print(f"Error de conexión: {e}")
 
 if __name__ == "__main__":
     test_db_and_auth()

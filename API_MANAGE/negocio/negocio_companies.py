@@ -12,4 +12,4 @@ def crear_compania(nombre, slogan, negocio):
         id_compania = insertar_objeto(compania)
         return id_compania
     except Exception as error:
-        print(f'[ERROR] Error al guardar la compañía: {error}')
+        print(f'Error al guardar la compañía: {error}')

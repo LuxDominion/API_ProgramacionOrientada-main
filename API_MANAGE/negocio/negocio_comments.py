@@ -1,67 +1,80 @@
+# Lógica de Comentarios
+
 from prettytable import PrettyTable
 import requests
-import json
-from datos import obtener_listado_objetos
-from modelos import Comment, Post
-from datos import insertar_objeto
-
+from datos import obtener_listado_objetos, insertar_objeto
+from modelos import Comment
 
 def obtener_data_comentarios(url):
-    respuesta = requests.get(url)
-    if respuesta.status_code == 200:
-        print("Solicitud correcta, procesando data...")
-        comentarios = respuesta.json()
-        contador = 0
-        comentarios_existentes = obtener_listado_objetos(Comment)
-        ids_existentes = [c.id for c in comentarios_existentes] if comentarios_existentes else []
+    try:
+        respuesta = requests.get(url)
         
-        for comentario in comentarios:
-            try:
-                if comentario['id'] in ids_existentes:
+        if respuesta.status_code == 200:
+            comentarios = respuesta.json()
+            contador = 0
+            
+            comentarios_existentes = obtener_listado_objetos(Comment)
+            ids_existentes = [c.id for c in comentarios_existentes] if comentarios_existentes else []
+            
+            for com in comentarios:
+                try:
+                    if com['id'] in ids_existentes:
+                        continue
+                    
+                    crear_comentario(
+                        com['name'],
+                        com['email'],
+                        com['body'],
+                        com['postId']
+                    )
+                    contador += 1
+                except Exception as e:
                     continue
-                
-                crear_comentario(
-                    comentario['name'],
-                    comentario['email'],
-                    comentario['body'],
-                    comentario['postId']
-                )
-                contador += 1
-            except Exception as e:
-                continue
-        
-        print(f"[OK] {contador} comentarios cargados.")
-
-    elif respuesta.status_code == 204:
-        print("Consulta ejecutada correctamente, pero NO se han encontrado datos.")
-    else:
-        print(
-            f"La solicitud falló con el siguiente código de error: {respuesta.status_code}")
+            
+            print(f"Se descargaron {contador} comentarios")
+        else:
+            print(f"Error: {respuesta.status_code}")
+    
+    except Exception as e:
+        print(f"Error: {e}")
 
 def listado_comentarios():
-    tabla_comentarios = PrettyTable()
-    tabla_comentarios.field_names = [
-        'N°', 'Nombre', 'Email','Comentario','Id Publicación']
-    listado_comentarios = obtener_listado_objetos(Comment)
-
-    if listado_comentarios:
-        for comentario in listado_comentarios:
-            tabla_comentarios.add_row(
-                [comentario.id, comentario.name, comentario.email,comentario.body,comentario.postId])
-        print(tabla_comentarios)
-    else:
-        print("No hay comentarios para mostrar. Use la opción 6 para descargarlos.")
-
+    try:
+        comentarios = obtener_listado_objetos(Comment)
+        
+        if comentarios:
+            tabla = PrettyTable()
+            tabla.field_names = ['ID', 'Nombre', 'Email', 'Comentario', 'ID Publicación']
+            
+            for com in comentarios:
+                tabla.add_row([
+                    com.id,
+                    com.name,
+                    com.email,
+                    com.body,
+                    com.postId
+                ])
+            
+            print(tabla)
+        else:
+            print("No hay comentarios guardados")
+    
+    except Exception as e:
+        print(f"Error: {e}")
 
 def crear_comentario(nombre, correo, contenido, id_post):
-    comentario = Comment(
-        name=nombre,
-        email=correo,
-        body=contenido,
-        postId=id_post
-    )
     try:
-        id_comentario = insertar_objeto(comentario)
+        nuevo_com = Comment(
+            name=nombre,
+            email=correo,
+            body=contenido,
+            postId=id_post
+        )
+        
+        id_comentario = insertar_objeto(nuevo_com)
         return id_comentario
-    except Exception as error:
-        print(f'[ERROR] Error al guardar comentario: {error}')
+    
+    except Exception as e:
+        print(f"Error al guardar el comentario: {e}")
+        return None
+

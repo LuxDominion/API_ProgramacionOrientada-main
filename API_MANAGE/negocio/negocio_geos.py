@@ -11,4 +11,4 @@ def crear_geolocalizacion(latitud, longitud):
         id_geo = insertar_objeto(geo)
         return id_geo
     except Exception as error:
-        print(f'[ERROR] Error al guardar la geolocalización: {error}')
+        print(f'Error al guardar la geolocalización: {error}')

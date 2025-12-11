@@ -14,4 +14,4 @@ def crear_direccion(calle, departamento, ciudad, codigo_postal, geolocalizacion)
         id_direccion = insertar_objeto(direccion)
         return id_direccion
     except Exception as error:
-        print(f'[ERROR] Error al guardar la dirección: {error}')
+        print(f'Error al guardar la dirección: {error}')
