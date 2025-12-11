@@ -9,7 +9,7 @@ def validar_nombre(nombre):
 
 def validar_correo(correo):
     """Valida el formato del correo electrónico"""
-    if not correo or '@' not in correo:
+    if not correo or '@' not in correo: 
         print("Correo inválido.")
         return False
     return True
