@@ -1,0 +1,11 @@
+user = 'root'
+password = ''
+server = 'localhost'
+port = 3306
+database = 'api'
+url_users = 'https://jsonplaceholder.typicode.com/users'
+url_posts = 'https://jsonplaceholder.typicode.com/posts'
+url_comments = 'https://jsonplaceholder.typicode.com/comments'
+url_albums = 'https://jsonplaceholder.typicode.com/albums'
+url_photos = 'https://jsonplaceholder.typicode.com/photos'
+url_todos = 'https://jsonplaceholder.typicode.com/todos'
